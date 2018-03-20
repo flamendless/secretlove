@@ -10,21 +10,11 @@ local secretlove = {
 local _debug = false
 local predefined = {
 	alphabet  = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
-	reverse_alphabet = {},
-	reverse = {}
+	reverse_alphabet = nil,
+	caesar = nil,
+	invert = {},
 }
 secretlove.__index = secretlove
-
-local function initReverse()
-	for k = 0, #predefined.alphabet-1 do
-		table.insert(predefined.reverse_alphabet,
-			predefined.alphabet[#predefined.alphabet - k])
-	end
-	for k,v in pairs(predefined.alphabet) do
-		local _v = predefined.reverse_alphabet[k]
-		predefined.reverse[tostring(v)] = _v
-	end
-end
 
 local function string_to_table(str)
 	assert(str, "string is required")
@@ -33,19 +23,57 @@ local function string_to_table(str)
 	return t
 end
 
+local function initReverse()
+	predefined.reverse_alphabet = {}
+	for k = 0, #predefined.alphabet-1 do
+		table.insert(predefined.reverse_alphabet,
+			predefined.alphabet[#predefined.alphabet - k])
+	end
+	for k,v in pairs(predefined.alphabet) do
+		local _v = predefined.reverse_alphabet[k]
+		predefined.invert[tostring(v)] = _v
+	end
+end
+
+local function initCaesar(shift)
+	predefined.caesar = {}
+	for i = shift, #predefined.alphabet - 1 + shift do
+		if predefined.alphabet[i] then
+			table.insert(predefined.caesar,
+				predefined.alphabet[i])
+		else
+			local _i = (i - #predefined.alphabet)
+			table.insert(predefined.caesar,
+				predefined.alphabet[_i])
+		end
+	end
+	local i = 1
+	local t = {}
+	for k,v in pairs(predefined.alphabet) do
+		t[v] = predefined.caesar[i]
+		i = i + 1
+	end
+	predefined.caesar = t
+end
+
 function secretlove:setDebug()
 	_debug = true
 end
 
-function secretlove:new(t)
+function secretlove:new(t,i)
 	local obj = {}
 	obj.__index = obj
 
 	if type(t) == "table" then
 		obj.secret_code = t
-	elseif t == "reverse" then
-		if predefined.reverse[1] == nil then
+	elseif t == "invert" then
+		if predefined.reverse_alphabet == nil then
 			initReverse()
+		end
+		obj.secret_code = predefined[t]
+	elseif t == "caesar" then
+		if predefined.caesar == nil then
+			initCaesar(i)
 		end
 		obj.secret_code = predefined[t]
 	end
@@ -62,6 +90,11 @@ function secretlove:encode(str)
 	local str = str
 	local t = string_to_table(str)
 	for k,v in pairs(t) do
+		--make sure to consider uppercased letter
+		local _v = string.lower(v)
+		if secret_code[_v] then
+			v = _v
+		end
 		if secret_code[v] then
 			if type(secret_code[v]) == "table" then
 				local r = math.random(1, #secret_code[v])
