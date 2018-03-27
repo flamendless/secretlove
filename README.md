@@ -13,6 +13,19 @@ This is a general lua module, the title aptly follows the naming conventions of 
 # USAGE
 check the sample code [here](https://github.com/flamendless/secretlove/blob/master/main.lua)
 
+To run the sample, just type in
+
+```bash
+lua main.lua
+```
+
+# FEATURES
+This library includes the following (so far):
+
+* Caesar's Cipher (letter-shift)
+* Atbash (reverse alphabet)
+* Jejemon (The Philippines' Worst Trend)
+
 # TODO
 
 Add more predefined codes.

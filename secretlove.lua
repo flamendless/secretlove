@@ -3,16 +3,26 @@
 --Created by Brandon Blanker Lim-it @flamendless
 --this is in continuation of my prior simple tutorial on the same subject which you can see in my gist
 
-local secretlove = {
-	secret_code = {},
-}
+local secretlove = { secret_code = {},}
 
 local _debug = false
 local predefined = {
 	alphabet  = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},
 	reverse_alphabet = nil,
 	caesar = nil,
-	invert = {},
+	atbash = nil,
+	jejemon = {
+		a = {"4","ah","ha"},
+		b = {"bh","vh","bb"},
+		c = {"c","ch","ck","qh"},
+		d = {"d","dh","hd"},
+		e = {"3","33","eh","h3"},
+		f = {"fh","ph"}, g = {"gh","gg"},
+		h = "hh", i = {"ay","hay"}, k = {"ck","kk","q"},
+		o = {"oo","0"}, p = {"ph","hp"}, q = {"qq","qh"},
+		s = {"xh","sh","ch","xx"}, u = {"uu","oo","ooh","hoo"},
+		y = {"yh","yy"}
+	}
 }
 secretlove.__index = secretlove
 
@@ -23,15 +33,16 @@ local function string_to_table(str)
 	return t
 end
 
-local function initReverse()
+local function initATBASH()
 	predefined.reverse_alphabet = {}
 	for k = 0, #predefined.alphabet-1 do
 		table.insert(predefined.reverse_alphabet,
 			predefined.alphabet[#predefined.alphabet - k])
 	end
+	predefined.atbash = {}
 	for k,v in pairs(predefined.alphabet) do
 		local _v = predefined.reverse_alphabet[k]
-		predefined.invert[tostring(v)] = _v
+		predefined.atbash[tostring(v)] = _v
 	end
 end
 
@@ -56,8 +67,8 @@ local function initCaesar(shift)
 	predefined.caesar = t
 end
 
-function secretlove:setDebug()
-	_debug = true
+function secretlove:setDebug(bool)
+	_debug = bool
 end
 
 function secretlove:new(t,i)
@@ -66,15 +77,17 @@ function secretlove:new(t,i)
 
 	if type(t) == "table" then
 		obj.secret_code = t
-	elseif t == "invert" then
+	elseif t == "atbash" then
 		if predefined.reverse_alphabet == nil then
-			initReverse()
+			initATBASH()
 		end
 		obj.secret_code = predefined[t]
 	elseif t == "caesar" then
 		if predefined.caesar == nil then
 			initCaesar(i)
 		end
+		obj.secret_code = predefined[t]
+	elseif t == "jejemon" then
 		obj.secret_code = predefined[t]
 	end
 
