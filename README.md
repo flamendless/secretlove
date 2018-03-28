@@ -1,7 +1,9 @@
 # WHAT IS THIS?
 
 Convert `abc is now xyz` into `zyx rh mld cba` using ATBASH.
+
 Convert `abc is now xyz` into `zab ku pqy cde` using CAESAR'S CIPHER with shift 3.
+
 Convert `Kamusta po kayo?` into `qhamhooxhtah hpoo kkahyyoo?` using JEJEMON.
 
 You can also make your own secret code!
