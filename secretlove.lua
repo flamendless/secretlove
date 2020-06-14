@@ -48,7 +48,7 @@ end
 
 local function initCaesar(shift)
 	predefined.caesar = {}
-	for i = shift, #predefined.alphabet - 1 + shift do
+	for i = shift + 1, #predefined.alphabet - 1 + shift do
 		if predefined.alphabet[i] then
 			table.insert(predefined.caesar,
 				predefined.alphabet[i])
